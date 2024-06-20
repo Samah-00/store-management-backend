@@ -1,4 +1,4 @@
-package controller;
+package com.example.storebackend.controller;
 
 import com.example.storebackend.model.Product;
 import com.example.storebackend.service.ProductService;

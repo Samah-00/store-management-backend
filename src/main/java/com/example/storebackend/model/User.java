@@ -1,6 +1,7 @@
 package com.example.storebackend.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,7 +15,18 @@ public class User {
     private Long id;
 
     private String username;
+
+    @JsonIgnore
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    private List<Order> orders;}
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Order> orders;
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public User() {}
+}
