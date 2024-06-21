@@ -48,7 +48,7 @@ public class OrderController {
     public ResponseEntity<List<Order>> getOrders(@RequestParam(required = false) Long userId) {
         List<Order> orders;
         try {
-            orders = (userId != null) ? orderService.getUserOrders(userId): orderService.getOrders();
+            orders = (userId != null) ? orderService.getUserOrders(userId) : orderService.getOrders();
             return new ResponseEntity<>(orders, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

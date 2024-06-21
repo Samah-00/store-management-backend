@@ -29,7 +29,6 @@ public class OrderService {
             Order order = new Order();
             double totalPrice = 0.0;
             List<OrderItem> orderItems = new ArrayList<>();
-
             User user = userRepository.findById(userId).get();
 
             for (CartItem cartItem : cart) {
@@ -45,7 +44,6 @@ public class OrderService {
                 // Update product stock
                 requestedProduct.setStock(requestedProduct.getStock() - cartItem.getQuantity());
                 productRepository.save(requestedProduct);
-
                 // Create and add order item
                 OrderItem orderItem = OrderItem.builder()
                         .order(order)

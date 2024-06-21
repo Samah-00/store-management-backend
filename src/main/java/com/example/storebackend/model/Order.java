@@ -26,4 +26,3 @@ public class Order {
 
     private Double totalPrice;
 }
-
