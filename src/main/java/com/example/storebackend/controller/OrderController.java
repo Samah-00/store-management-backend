@@ -54,10 +54,10 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getOrders(@RequestParam(required = false) Long userId) {
+    public ResponseEntity<List<Order>> getOrders(@RequestParam Long userId) {
         List<Order> orders;
         try {
-            orders = (userId != null) ? orderService.getUserOrders(userId) : orderService.getOrders();
+            orders = orderService.getUserOrders(userId);
             return new ResponseEntity<>(orders, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
