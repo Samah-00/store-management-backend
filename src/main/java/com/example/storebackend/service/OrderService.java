@@ -33,10 +33,16 @@ public class OrderService {
             Order order = new Order();
             double totalPrice = 0.0;
             List<OrderItem> orderItems = new ArrayList<>();
-            User user = userRepository.findById(userId).get();
+            User user = userRepository.findById(userId).orElseThrow(() -> {
+                log.error(String.format("User with ID %d not found.", userId));
+                return new IllegalArgumentException("User not found.");
+            });
 
             for (CartItem cartItem : cart) {
-                Product requestedProduct = productRepository.findById(cartItem.getProductId()).get();
+                Product requestedProduct = productRepository.findById(cartItem.getProductId()).orElseThrow(() -> {
+                    log.error(String.format("Product with ID %d not found.", cartItem.getProductId()));
+                    return new IllegalArgumentException("Product not found.");
+                });
 
                 if (cartItem.getQuantity() > requestedProduct.getStock()) {
                     String message = String.format("Not enough stock for product %s", requestedProduct.getName());
@@ -68,21 +74,20 @@ public class OrderService {
             return order;
         } catch (Exception e) {
             log.error(String.format("Error while creating order: %s", e.getMessage()));
-            if (Objects.equals(e.getMessage(), "No value present")) {
-                throw new IllegalArgumentException("Product not found.");
-            }
-                throw new RuntimeException("Error while creating order", e);
+
+            throw new RuntimeException("Error while creating order", e);
         }
     }
 
     public Order getOrderById(Long orderId) {
         try {
-            return orderRepository.findById(orderId).get();
+            return orderRepository.findById(orderId).orElseThrow(() -> {
+                log.error(String.format("Order with ID %d not found.", orderId));
+                return new IllegalArgumentException("Order not found.");
+            });
         } catch (Exception e) {
             log.error(String.format("Error getting order with ID %d: %s", orderId, e.getMessage()));
-            if (Objects.equals(e.getMessage(), "No value present")) {
-                throw new IllegalArgumentException("Product not found.");
-            }
+           
             throw new RuntimeException("Error getting order", e);
         }
     }
