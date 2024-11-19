@@ -4,6 +4,9 @@ import com.example.storebackend.model.*;
 import com.example.storebackend.repository.OrderRepository;
 import com.example.storebackend.repository.ProductRepository;
 import com.example.storebackend.repository.UserRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
@@ -36,7 +40,7 @@ public class OrderService {
 
                 if (cartItem.getQuantity() > requestedProduct.getStock()) {
                     String message = String.format("Not enough stock for product %s", requestedProduct.getName());
-                    System.out.println(message);
+                    log.error(message);
                     throw new IllegalArgumentException(message);
                 }
 
@@ -59,10 +63,11 @@ public class OrderService {
             order.setOrderItems(orderItems);
             order.setTotalPrice(totalPrice);
             orderRepository.save(order);
+            log.info(String.format("Order for user ID %d created successfully with total price %.2f.", userId, totalPrice));
 
             return order;
         } catch (Exception e) {
-            System.out.printf("Error while creating order: %s\n", e.getMessage());
+            log.error(String.format("Error while creating order: %s", e.getMessage()));
             if (Objects.equals(e.getMessage(), "No value present")) {
                 throw new IllegalArgumentException("Product not found.");
             }
@@ -74,7 +79,7 @@ public class OrderService {
         try {
             return orderRepository.findById(orderId).get();
         } catch (Exception e) {
-            System.err.printf("Error getting order with Id %d: %s%n", orderId, e.getMessage());
+            log.error(String.format("Error getting order with ID %d: %s", orderId, e.getMessage()));
             if (Objects.equals(e.getMessage(), "No value present")) {
                 throw new IllegalArgumentException("Product not found.");
             }
@@ -86,7 +91,7 @@ public class OrderService {
         try {
             return orderRepository.findByUserId(userId);
         } catch (Exception e) {
-            System.err.printf("Error getting orders for user with Id %d: %s%n", userId, e.getMessage());
+            log.error(String.format("Error getting orders for user with ID %d: %s", userId, e.getMessage()));
             if (Objects.equals(e.getMessage(), "No value present")) {
                 throw new IllegalArgumentException("Product not found.");
             }
@@ -98,7 +103,7 @@ public class OrderService {
         try {
             return orderRepository.findAll();
         } catch (Exception e) {
-            System.err.printf("Error getting all orders: %s%n", e.getMessage());
+            log.error(String.format("Error getting all orders: %s", e.getMessage()));
             throw new RuntimeException("Error getting all orders", e);
         }
     }
