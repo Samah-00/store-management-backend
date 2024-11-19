@@ -72,6 +72,8 @@ public class OrderService {
             log.info(String.format("Order for user ID %d created successfully with total price %.2f.", userId, totalPrice));
 
             return order;
+        } catch (IllegalArgumentException e) {
+            throw e; // Re-throw validation errors
         } catch (Exception e) {
             log.error(String.format("Error while creating order: %s", e.getMessage()));
 
@@ -85,6 +87,8 @@ public class OrderService {
                 log.error(String.format("Order with ID %d not found.", orderId));
                 return new IllegalArgumentException("Order not found.");
             });
+        } catch (IllegalArgumentException e) {
+            throw e; // Re-throw validation errors
         } catch (Exception e) {
             log.error(String.format("Error getting order with ID %d: %s", orderId, e.getMessage()));
            
@@ -98,7 +102,7 @@ public class OrderService {
         } catch (Exception e) {
             log.error(String.format("Error getting orders for user with ID %d: %s", userId, e.getMessage()));
             if (Objects.equals(e.getMessage(), "No value present")) {
-                throw new IllegalArgumentException("Product not found.");
+                throw new IllegalArgumentException("User not found.");
             }
             throw new RuntimeException("Error getting user orders", e);
         }
