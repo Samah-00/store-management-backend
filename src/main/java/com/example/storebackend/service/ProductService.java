@@ -2,6 +2,7 @@ package com.example.storebackend.service;
 
 import com.example.storebackend.model.Product;
 import com.example.storebackend.repository.ProductRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
@@ -22,7 +24,7 @@ public class ProductService {
         try {
             return productRepository.save(product);
         } catch (Exception e) {
-            System.err.printf("Error saving product: %s%n", e.getMessage());
+            log.error(String.format("Error saving product: %s", e.getMessage()));
             throw new RuntimeException("Error saving product", e);
         }
     }
@@ -31,7 +33,7 @@ public class ProductService {
         try {
             return productRepository.findAll();
         } catch (Exception e) {
-            System.err.printf("Error getting all products: %s%n", e.getMessage());
+            log.error(String.format("Error getting all products: %s", e.getMessage()));
             throw new RuntimeException("Error getting all products", e);
         }
     }
@@ -41,7 +43,7 @@ public class ProductService {
             Optional<Product> product = productRepository.findById(productId);
             return product.get();
         } catch (Exception e) {
-            System.err.printf("Error getting product with Id %d: %s%n", productId, e.getMessage());
+            log.error(String.format("Error getting product with Id %s: %s", productId, e.getMessage()));
             if (Objects.equals(e.getMessage(), "No value present")) {
                 throw new IllegalArgumentException("Product not found");
             }
@@ -53,7 +55,7 @@ public class ProductService {
         try {
             productRepository.deleteById(productId);
         } catch (Exception e) {
-            System.err.printf("Error deleting product with Id %d: %s%n", productId, e.getMessage());
+            log.error(String.format("Error deleting product with Id %s: %s", productId, e.getMessage()));
             throw new RuntimeException("Error deleting product", e);
         }
     }
