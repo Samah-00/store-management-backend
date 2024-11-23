@@ -158,7 +158,7 @@ You can test the endpoints using Postman or any other API testing tool. Below ar
     - **Headers**:
         - `Authorization`: Basic `user:user_password`
 
-### Authentication
+## Authentication
 
 This project uses basic authentication with the following credentials:
 
@@ -168,3 +168,33 @@ This project uses basic authentication with the following credentials:
 - **User**:
     - **Username**: `user`
     - **Password**: `user_password`
+
+## Logging
+
+This project uses **SLF4J** with the Logback implementation for logging. Logging is used to capture key application events, errors, and debugging information to assist in development, debugging, and monitoring.
+
+### Key Logging Features
+
+- **Info Logs**: 
+    - Informational messages about the application's regular operations.
+    - Example: Successful payment processing.
+  
+- **Error Logs**:
+    - Captures unexpected issues, such as database access errors or exceptions during processing.
+
+### Examples of Logging in the Codebase
+
+**Logs insufficient stock or other validation issues**:
+```java
+log.warn(String.format("Not enough stock for product ID %d. Requested: %d, Available: %d",
+                       requestedProduct.getId(), cartItem.getQuantity(), requestedProduct.getStock()));
+```
+
+**Captures database-related exceptions when retrieving orders**:
+```java
+log.error(String.format("Error retrieving order with ID %d: %s", orderId, e.getMessage()), e);
+```
+
+### How to View Logs
+
+Logs are printed to the console by default. You can customize the logging configuration in the `src/main/resources/application.properties` file.

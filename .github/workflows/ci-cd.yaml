@@ -3,7 +3,10 @@ name: CI/CD Pipeline for Store Management Backend
 on:
     pull_request:
         branches:
-            - main
+            - master
+    push:
+        branches:
+            - master
 
 jobs:
     unit-tests:
